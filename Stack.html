@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stack</title>
+</head>
+<body>
+    <script>
+        class Stack {
+            constructor() {
+                this.items = []
+            }
+            push(element) {
+                this.items.push(element)
+            }
+            pop() {
+                return this.items.pop()
+            }
+            peek() {
+                return this.items[items.length-1]
+            }
+            isEmpty() {
+                return this.items.length===0
+            }
+            size() {
+                return this.items.length
+            }
+            stackToString() {
+                return this.items.toString().replace(',', ' ')
+            }
+        }
+        // const s = new Stack();
+        // s.push(2);
+        // s.push(3);
+        // console.log(s.stackToString());
+        
+
+        function dec2bin(decNumber) {
+            const stack = new Stack();
+            while(decNumber > 0) {
+                stack.push(decNumber % 2);
+                decNumber = Math.floor(decNumber / 2);
+            }
+            let binaryString = '';
+            while(!stack.isEmpty()) {
+                binaryString += stack.pop();
+            }
+            return binaryString
+        }
+        console.log(dec2bin(100));
+    </script>
+</body>
+</html>
