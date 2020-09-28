@@ -103,13 +103,15 @@
 
             removeAt(position) {
                 if(position < 0 || position >= this.length) return null;
-                if(position === 0) {
-                    this.header = this.header.next
-                    return true;
-                }
                 let index = 0;
                 let current = this.header;
                 let previous = null;
+                if(position === 0) {
+                    this.header = this.header.next
+                    this.length -=1;
+                    return current.data;
+                }
+                
                 while(index < position) {
                     index ++;
                     previous = current;
@@ -123,6 +125,14 @@
             remove(data) {
                 let index = this.listIndexOf(data);
                 return this.removeAt(index);
+            }
+
+            size() {
+                return this.length;
+            }
+
+            isEmpty() {
+                return this.length === 0; 
             }
 
             linkedListToString() {
@@ -146,11 +156,12 @@
         list.insert('ccc', 5);
         list.update('666',1);
         list.removeAt(0);
-        console.log(list.linkedListToString());
-        list.removeAt(2);
-        console.log(list.linkedListToString());
-        list.remove('cba');
-        console.log(list.linkedListToString());
+        console.log(list);
+        // list.removeAt(2);
+        // console.log(list.linkedListToString());
+        // list.remove('cba');
+        // console.log(list.linkedListToString());
+        // console.log(list.size());
        
       
         
