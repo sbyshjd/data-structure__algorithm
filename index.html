@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>test the use of 'this' key word</title>
 </head>
 <body>
     <button id='button'>click</button>
@@ -18,18 +18,20 @@
         }
         const button = document.getElementById('button');
         // button.addEventListener('click', counter.inc.bind(counter),false)
-        button.addEventListener('click', () => {counter.inc()},false)
+        button.addEventListener('click', function () {
+            counter.inc()},false)
 
+//use of call apply 
         function createArray() {
             return [].slice.call(arguments)
         }
 
-        console.log(createArray(1,2,3,4,5,6,7));
+        // console.log(createArray(1,2,3,4,5,6,7));
         // function MaxValueFromArray(array) {
         //     return Math.max([])
         // }
         // console.log(MaxValueFromArray())
-        console.log(Math.max([]))
+        // console.log(Math.max([]))
 
     </script>
 </body>

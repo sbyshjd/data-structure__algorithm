@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Queue</title>
+</head>
+<body>
+    <div>
+        实现队列和实现栈一样 
+        可以通过数组实现 
+        或者通过链表实现
+        现在先通过数组实现
+    </div> 
+    <script>
+        class Queue {
+            constructor() {
+                this.items = [];
+            }
+            enqueue(element) {
+                this.items.push(element)
+            }
+            dequeue() {
+                this.items.shift()
+            }
+            front() {
+                return this.items[0]
+            }
+            isEmpty() {
+                return this.items.length === 0
+            }
+            size() {
+                return this.items.length;
+            }
+            queueToString() {
+                return this.items.toString().replace(/\,/g, ' ')
+            }
+        }
+// a queue is formed and it works
+        // const q = new Queue()
+        // q.enqueue('abc')
+        // q.enqueue('cba')
+        // q.enqueue('nba')
+        // q.enqueue('fcd')
+        // console.log(q.queueToString())
+        // console.log(q.front())
+
+// a queue question 击鼓传花问题（给定人数，给定数字，从第一个人开始数1，数到特定数字的人被淘汰，最后剩下的人是谁？）
+        function deletePeopleByFixedNumer (peopleNum, fixedNum) {
+            if(fixedNum === 1) return peopleNum.toString();
+
+            const queue = new Queue();
+            for(let i = 1; i <= peopleNum; i++) {
+                    queue.enqueue(i);
+            };
+            while(queue.size() > 1 ) {
+                for(let i = 1; i < fixedNum; i++) {
+                    queue.enqueue(queue.front());
+                    queue.dequeue();
+                }
+                queue.dequeue();
+            }
+            return queue.queueToString()
+        }
+        let finalNumber = deletePeopleByFixedNumer(7,4);
+        console.log(finalNumber);
+
+    </script>
+</body>
+</html>
