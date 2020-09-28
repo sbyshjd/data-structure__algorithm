@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PriorityQueue</title>
+</head>
+<body>
+    <script>
+        class PriorityQueue {
+            constructor() {
+                this.items = [];
+            }
+            enqueue(value, priority) {
+                //if there is no item or the priority is lowest, push the element to the items directly
+                if(this.items.length === 0 || priority >= this.items[this.items.length-1].priority) {
+                    this.items.push({value,priority})
+                    return;
+                } 
+                //then put the element just before the first element whose priority is lower that him
+                for( let element of this.items ) {
+                    if( priority < element.priority ) {
+                        let index = this.items.indexOf(element);
+                        this.items.splice(index, 0, {value, priority})
+                        return;
+                    }
+                }   
+            }
+            dequeue() {
+                return this.items.shift()
+            }
+            front() {
+                return this.items[0]
+            }
+            isEmpty() {
+                return this.items.length === 0
+            }
+            size() {
+                return this.items.length;
+            }
+            queueToString() {
+                return JSON.stringify(this.items)
+            }
+
+        }
+        const pQ = new PriorityQueue();
+        pQ.enqueue('Tom', 10);
+        pQ.enqueue('Jack', 20);
+        pQ.enqueue('Lucy', 20);
+        pQ.enqueue('Jerry', 5);
+        pQ.enqueue('Mary', 10);
+        pQ.enqueue('John', 15);
+        pQ.dequeue();
+        const str = pQ.queueToString();
+        console.log(str)
+    </script>
+</body>
+</html>

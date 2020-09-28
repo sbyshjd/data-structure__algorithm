@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linked List</title>
+</head>
+<body>
+    <div>
+        链表的每一元素 都由：
+        元素本身的节点
+        和 指向下一个元素节点的引用（有些语言称之为 指针 或者 连接）组成
+    </div>
+    <div>
+        优点：
+        1. 链表空间不连续；
+        2. 可以无限的延伸下去，不必在开始时就确定大小
+        3. 在插入和删除数据时，时间复杂度可以达到O(1), 相对于数组性能高很多
+    </div>
+    <div>
+        缺点：
+        无法通过下标直接访问元素，不论访问什么元素，都要从头开始访问
+    </div>
+    <script>
+        
+        class LinkedList {
+            constructor() {
+                this.header = null;
+                this.length = 0;
+
+            }
+            append(data) {
+                const node = {data, next: null}
+                if(this.length === 0) {
+                    this.header = node;
+                } else {
+                    let current = this.header;
+                    while(current.next) {
+                        current = current.next
+                    }
+                    current.next = node;
+                }
+                this.length += 1;
+            }
+
+            insert(data, position) {
+                if(position < 0 || position > this.length) return false;
+                const node = {data, next: null};
+                if(position === 0) {
+                    node.next = this.header;
+                    this.header = node;   
+                } else {
+                    let index = 0;
+                    let current = this.header;
+                    let previous = null;
+                    while(index  < position) {
+                        index +=1; 
+                        previous = current;
+                        current = current.next; 
+                    }
+                    previous.next = node;
+                    node.next = current;
+                }
+                this.length +=1;
+                return true;
+            }
+
+            get(position) {
+                if(position < 0 || position >= this.length) return null;
+                let index = 0;
+                let current = this.header;
+                while( index < position ) {
+                    index +=1;
+                    current = current.next;
+                }
+                return current.data;
+            }
+
+            listIndexOf(data) {
+                let index = 0;
+                let current = this.header;
+                while(current) {
+                    if(current.data === data) {
+                        return index
+                    }
+                    current = current.next;
+                    index += 1;
+                }
+                return -1
+            }
+
+            update(data, position) {
+                if(position < 0 || position >= this.length) return false;
+                let current = this.header;
+                let index = 0;
+                while ( index < position) {
+                    index ++;
+                    current = current.next;
+                }
+                current.data = data;
+                return true;
+            }
+
+            removeAt(position) {
+                if(position < 0 || position >= this.length) return null;
+                if(position === 0) {
+                    this.header = this.header.next
+                    return true;
+                }
+                let index = 0;
+                let current = this.header;
+                let previous = null;
+                while(index < position) {
+                    index ++;
+                    previous = current;
+                    current = current.next;
+                }
+                previous.next = current.next;
+                this.length -= 1 ;
+                return current.data;
+            }
+
+            remove(data) {
+                let index = this.listIndexOf(data);
+                return this.removeAt(index);
+            }
+
+            linkedListToString() {
+                let current = this.header;
+                let listString = '';
+                while( current ) {
+                    listString += (current.data + ' ');
+                    current = current.next;
+                }
+                return listString
+            }
+
+        }
+
+        const list = new LinkedList();
+        list.append('abc');
+        list.append('cba');
+        list.append('nba');
+        list.insert('aaa', 0);
+        list.insert('bbb', 3);
+        list.insert('ccc', 5);
+        list.update('666',1);
+        list.removeAt(0);
+        console.log(list.linkedListToString());
+        list.removeAt(2);
+        console.log(list.linkedListToString());
+        list.remove('cba');
+        console.log(list.linkedListToString());
+       
+      
+        
+        // console.log(list.linkedListToString())
+    </script>
+</body>
+</html>
