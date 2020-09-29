@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set</title>
+</head>
+<body>
+    <h1>集合类 在JS ES6 中已经实现</h1>
+    <div>
+        没有顺序 不能重复
+    </div>
+        <script>
+            class Set {
+                constructor() {
+                    this.items = {};
+                }
+
+                has(value) {
+                    return this.items.hasOwnProperty(value)
+                }
+
+                add(value) {
+                    if(this.has(value)) return false;
+                    this.items[value] = value;
+                    return true;
+                }
+                
+                remove(value) {
+                    if(!this.has(value)) return false;
+                    delete this.items[value];
+                    return true;
+                }
+
+                clear() {
+                    this.items = {};
+                }
+
+                size() {
+                    return Object.keys(this.items).length;
+                }
+
+                values() {
+                    return Object.keys(this.items);
+                }
+
+                union(otherSet) {
+                    const unionSet = new Set();
+                    const valuesA = this.values();
+                    valuesA.forEach(value => unionSet.add(value));
+                    const valuesB = otherSet.values();
+                    valuesB.forEach(value => unionSet.add(value));
+                    return unionSet;
+                }
+
+                intersection(otherSet) {
+                    const intersectionSet = new Set();
+                    const valuesA = this.values();
+                    valuesA.forEach(value => otherSet.has(value) && intersectionSet.add(value))
+                    return intersectionSet;
+                }
+
+                subtraction(otherSet) {
+                    const subtractionSet = new Set();
+                    const valuesA = this.values();
+                    valuesA.forEach(value => otherSet.has(value) || subtractionSet.add(value))
+                    return subtractionSet;
+                }
+
+                subSet(otherSet) {
+                    const valuesA = this.values();
+                    const valuesB = otherSet.values();
+                    //Array.every(): all the element meet the boolean of the function => return true;
+                    //Array.some(): there is an element .............................. => return true;
+                    const isSubSet = valuesA.every(value => valuesB.includes(value))
+                    return isSubSet;
+                }
+
+            }
+
+
+
+            const set = new Set();
+            // set.add('abc');
+            // set.add('abc');
+            set.add('aaa');
+            set.add('bbb');
+            // set.add('cba');
+            const set2 = new Set();
+            set2.add('aaa')
+            set2.add('bbb')
+            set2.add('333')
+            set2.add('444')
+
+            const newSet = set.subSet(set2);
+            console.log(newSet);
+            
+        </script>
+</body>
+</html>
