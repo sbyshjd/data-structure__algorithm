@@ -15,7 +15,194 @@
     </div>
 
     <script>
-        
+        class DoubleLinkedList {
+            constructor() {
+                this.head = null;
+                this.tail = null;
+                this.length = 0;
+            }
+            append(data) {
+                const node = {data, previous: null, next: null}
+                if(this.length === 0) {
+                    this.head = node;
+                    this.tail = node;
+                    this.length += 1;
+                    return true
+                }
+            //use tail to get the last one no need to traverse the whole list like the signle-linked list
+                node.previous = this.tail;
+                this.tail.next = node;
+                this.tail = node;
+                this.length += 1;
+                return true;
+            }
+            //while(current) 指向最后一个 在while中对其操作，出了 while 循环current 就是 null
+            //while（current.next) 指向了最后一个，但是没办法在while中进行操作，出了循环 current 是最后一个
+
+            insert(data, position) {
+                if(position < 0 || position > this.length) return false;
+                let node = {data, previous: null, next: null};
+                if(this.length === 0 || position === this.length ) {
+                    this.append(data);
+                    return;
+                }
+                if(position === 0) {
+                    this.head.previous = node;
+                    node.next = this.head;
+                    this.head = node;
+                    this.length += 1;
+                    return true;
+                }
+                let current = this.head;
+                let index = 0;
+                while(index < position){
+                    index++;
+                    current = current.next;
+                }
+                node.next = current;
+                node.previous = current.previous;
+                current.previous.next = node;
+                current.previous = node;
+                this.length += 1;
+                return true;
+
+            }
+
+            get(position) {
+                if(position < 0 || position >= this.length) return null;
+                //iterate from head to tail
+                if( position < this.length/2) {
+                    let index = 0;
+                    let current = this.head;
+                    while( index < position) {
+                        index++;
+                        current = current.next;
+                    }
+                    return current.data;
+                } else {
+                    let index = this.length - 1;
+                    let current = this.tail;
+                    while(index > position) {
+                        index --;
+                        current = current.previous;
+                    }
+                    return current.data;
+                }  
+            }
+
+            update(data, position) {
+                if( position < 0 || position >= this.length) return false;
+                if( position < this.length/2 ) {
+                    let index = 0;
+                    let current = this.head;
+                    while( index < position ) {
+                        index += 1;
+                        current = current.next;
+                    }
+                    current.data = data;
+                } else {
+                    let index = this.length - 1;
+                    let current = this.tail;
+                    while( index > position) {
+                        index -= 1;
+                        current = current.previous;
+                    }
+                    current.data = data;
+                }
+                return true;
+            }
+
+            indexOf(data) {
+                let current = this.head;
+                let index = 0;
+                while( current ) {
+                    if(current.data === data) {
+                        return index;
+                    }
+                    index += 1;
+                    current = current.next;
+                }
+                return -1;
+            }
+
+            removeAt(position) {
+                if( position < 0 || position >= this.length) return null;
+                let index = 0;
+                let current = this.head;
+                if( this.length === 1) {
+                    this.head = null;
+                    this.tail = null;
+                } else if( position === 0 ) {
+                    this.head.next.previous = null;
+                    this.head = this.head.next;
+                } else if( position === this.length - 1) {
+                    current = this.tail;
+                    this.tail.previous.next = null;
+                    this.tail = this.tail.previous;
+                } else {
+                    while( index < position ) {
+                    index += 1;
+                    current = current.next;
+                    }
+                    current.previous.next = current.next;
+                    current.next.previous = current.previous;
+                }
+                this.length -= 1;
+                return current.data;
+            }
+
+            remove(data) {
+                let index = this.indexOf(data);
+                return this.removeAt(index)
+            }
+
+            size() {
+                return this.length;
+            }
+            
+            isEmpty() {
+                return this.length === 0;
+            }
+
+            forwardToString() {
+                let current = this.head;
+                let string = '';
+                while(current) {
+                    string += (current.data + ' ');
+                    current = current.next;
+                }
+                return string;
+            }
+            backwardToString() {
+                let current = this.tail;
+                let string = '';
+                while(current) {
+                    string += (current.data + ' ');
+                    current = current.previous;
+                }
+                return string;
+            }
+            //alert 默认会调用 toString 方法来显示 string 否则会显示为 [Object Object]
+            toString() {
+                return this.forwardToString();
+            }
+        }
+
+        const list = new DoubleLinkedList();
+        list.append('aaa');
+        list.append('bbb');
+        list.insert('abc', 0);
+        list.insert('cba', 3);
+        list.insert('nba', 1)
+        // alert(list)
+        list.update('fiba', 0)
+        console.log(list.toString())
+        // console.log(list.removeAt(0));
+        list.remove('bbb')
+        console.log(list)
+        // console.log(list.get(4))
+        // console.log(list.indexOf('xxx'))
+        // console.log(list)
     </script>
     
 </body>
