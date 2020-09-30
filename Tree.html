@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tree Data Structure</title>
+</head>
+<body>
+    <h1>Binary Search Tree</h1>
+    <div>在bst 中会经常用到递归 递归写起来代码更简单（逻辑需要思考清楚） 但是空间复杂度更高（需要占用execution context）</div>
+    <div>循环效率更高，但是写起来会麻烦 有时候实现起来代码很多</div>
+    <div>理论上 所有的循环和递归都可以相互转化 所以视情况来选择递归或者循环 没有绝对的优劣</div>
+
+    <script>
+        class BinarySearchTree {
+            constructor() {
+                this.root = null;
+
+            }
+
+            insert(key) {
+                const node = {key, left: null, right: null};
+                if( !this.root ) {
+                    this.root = node;
+                } else{
+                    this.insertNode(this.root, node)
+                }
+            }
+
+            //运用递归调用来实现
+            insertNode(node, newNode) {
+                if (newNode.key < node.key) {
+                    if( !node.left ) {
+                        node.left = newNode;
+                        return;
+                    }
+                    this.insertNode(node.left, newNode)
+                    
+                } else {
+                    if( !node.right) {
+                        node.right = newNode;
+                        return;
+                    }
+                    this.insertNode(node.right, newNode)
+                    
+                }
+            }
+
+            preOrderTraversal(handler) {
+                this.preOrderTraversalNode(this.root, handler);
+            }
+
+            preOrderTraversalNode(node, handler) {
+                if ( node != null ) {
+                   handler(node.key);
+                   //回调函数进栈/出栈的处理。先判断左边 左边判断完 在出栈的过程中判断右边
+                   this.preOrderTraversalNode(node.left, handler);
+                   this.preOrderTraversalNode(node.right, handler);
+                }
+            }
+
+            midOrderTraversal(handler) {
+                this.midOrderTraversalNode(this.root, handler);
+            }
+
+            midOrderTraversalNode(node, handler) {
+                if( node != null) {
+                    this.midOrderTraversalNode(node.left, handler);
+                    handler(node.key);
+                    this.midOrderTraversalNode(node.right, handler);
+                }
+            }
+
+            postOrderTraversal(handler) {
+                this.postOrderTraversalNode(this.root, handler)
+            }
+
+            postOrderTraversalNode(node, handler) {
+                if(node !== null) {
+                    this.postOrderTraversalNode(node.left, handler);
+                    this.postOrderTraversalNode(node.right, handler);
+                    handler(node.key);
+                }
+            }
+
+            min() {
+                let node = this.root;
+                while( node.left ) {
+                    node = node.left;
+                }
+                return node.key;
+            }
+
+            max() {
+                let node = this.root;
+                while( node.right) {
+                    node = node.right;
+                }
+                return node.key
+            }
+
+            search(key) {
+                return this.searchNode(this.root, key);
+            }
+
+            searchNode(node, key) {
+                if( node === null ) return false;
+                if( node.key === key) return true;
+
+                if( node.key < key ) {
+                    //write return here is very important finish this function and start next one
+                    //otherwise this return value from last iteration will not get by the first one;
+                    return this.searchNode(node.right, key)
+                } else if (node.key > key) {
+                    return this.searchNode(node.left, key)
+                }
+            }
+
+        }
+
+        const bst = new BinarySearchTree();
+        bst.insert(11);
+        bst.insert(7);
+        bst.insert(15);
+        bst.insert(5);
+        bst.insert(3);
+        bst.insert(9);
+        bst.insert(8);
+        bst.insert(10);
+        bst.insert(13);
+        bst.insert(12);
+        bst.insert(14);
+        bst.insert(20);
+        bst.insert(18);
+        bst.insert(25);
+        bst.insert(6);
+
+        let result = '';
+        bst.postOrderTraversal((str) => {
+            result += (str + ' ');
+        })
+        console.log(result);
+        console.log(bst.search(7));
+        
+
+        
+        // console.log(bst)
+    </script>
+    
+</body>
+</html>

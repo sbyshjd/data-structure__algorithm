@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hash Table</title>
+</head>
+<body>
+    <h1>哈希表 是将string 转换为大数，然后大数再转换为数组区间内的一种 数组形式</h1>
+    <h1>为了应对重复：有 地址链法（又被称为拉链法） 或者开放地址发 实际操作中 地址链法比较多（搜索次数与装载因子load factor 呈线性关系）</h1>
+    <script>
+        class HashTable {
+            constructor() {
+                this.storage = [];
+                this.count = 0;
+                this.limit = 7;
+            }
+
+            hashFunc(string, size) {
+                let hashCode = 0;
+                //37 为幂的底数 最好为质数 同时大于26（英文字母个数）
+                //[...str] change a string to array and copy
+                [...string].forEach(char => hashCode = 37 * hashCode + char.charCodeAt(0))
+                return hashCode%size 
+            }
+
+            put(key, value) {
+                let index = this.hashFunc(key, this.limit);
+                let bucket = this.storage[index];
+                //if there is no bucket => create a new one
+                if(!bucket) {
+                    bucket = [];
+                    this.storage[index] = bucket;
+                }
+                // the bucket has the key or not => change the key value or add the key value
+                let position = bucket.findIndex(element => element[0] === key);
+                if( position < 0 ) {
+                    bucket.push([key, value])
+                    //add the count
+                    this.count += 1;
+                    //check the load factor
+                    if( this.count > this.limit * 0.75) {
+                        let newLimit = this.getPrime(this.limit * 2)
+                        this.resize(newLimit);
+                    }
+                } else {
+                    //change the value the count is the same
+                    bucket[position][1] = value
+                }  
+
+                
+
+            }
+
+            get(key) {
+                let index = this.hashFunc(key, this.limit);
+                let bucket = this.storage[index];
+                if( !bucket ) {
+                    return null
+                }
+                let position = bucket.findIndex(element => element[0] === key);
+                if( position < 0) {
+                    return null;
+                } else {
+                    return bucket[position][1];
+                }
+            }
+
+            remove(key) {
+                let index = this.hashFunc(key, this.limit);
+                let bucket = this.storage[index];
+                if( !bucket ) {
+                    return null;
+                }
+                let position = bucket.findIndex(element => element[0] === key);
+                if( position < 0 ) {
+                    return null;
+                } else {
+                    let tuple = bucket[position];
+                    bucket.splice(position, 1);
+                    this.count -= 1;
+                    if(this.limit > 7 && this.count < this.limit * 0.25) {
+                        let newLimit = this.getPrime(Math.floor(this.limit / 2))
+                        this.resize(newLimit);
+                    }
+                    return tuple[1];
+                }
+            }
+
+            imEmpty() {
+                return this.count === 0;
+            }
+
+            size() {
+                return this.count;
+            }
+
+            //enlarge the size of HashTable
+            resize(newLimit) {
+                
+                const oldStorage = this.storage;
+                this.storage = [];
+                this.count = 0;
+                this.limit = newLimit;
+
+                for( let i = 0; i < oldStorage.length; i++) {
+                    let bucket = oldStorage[i];
+                    //there is no bucket
+                    if( !bucket ) {
+                        continue;
+                    }
+                    for( let j = 0; j < bucket.length; j++) {
+                        let key = bucket[j][0];
+                        let value = bucket[j][1];
+                        this.put(key, value);
+                    }
+                }
+
+            }
+
+            isPrime(number) {
+                const temp = Math.ceil(Math.sqrt(number));
+                if(number <= 2) return false;
+                for ( let i = 2; i <= temp ; i++ ) {
+                    if( number % i === 0 ) return false;
+                }
+                return true;                
+            }
+
+            getPrime(number) {
+                let num = number;
+                while(!this.isPrime(num)) {
+                    num ++;
+                }
+                return num;
+            }
+        }
+
+        // const hT = new HashTable();
+        // hT.put('abc', '123');
+        // hT.put('cba', '321');
+        // hT.put('nba', '521');
+        // hT.put('mba', '520');
+
+        // console.log(hT.get('abc'));
+        // hT.put('abc', '111');
+        // console.log(hT.get('abc'));
+        // hT.remove('abc')
+        // console.log(hT.get('abc'));
+
+    </script>
+</body>
+</html>
