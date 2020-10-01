@@ -76,7 +76,7 @@
             }
 
             postOrderTraversalNode(node, handler) {
-                if(node !== null) {
+                if(node) {
                     this.postOrderTraversalNode(node.left, handler);
                     this.postOrderTraversalNode(node.right, handler);
                     handler(node.key);
@@ -98,7 +98,7 @@
                 }
                 return node.key
             }
-
+            //也可以用while循环实现 方法多变！
             search(key) {
                 return this.searchNode(this.root, key);
             }
@@ -114,6 +114,92 @@
                 } else if (node.key > key) {
                     return this.searchNode(node.left, key)
                 }
+            }
+            //delete a node is complicated it has three different situation: n0 node / n1 node / n2 node
+            remove(key) {
+                let current = this.root;
+                let parent = null;
+                let isLeft = false;
+                while( current ) { 
+                    if( current.key < key ) {
+                        parent = current;
+                        current = current.right;
+                        isLeft = false;
+                    } else if ( current.key > key) {
+                        parent = current;
+                        current = current.left;
+                        isLeft = true;
+                    } else {
+                        break;
+                    }
+                }
+
+                if( !current ) return false;
+                // the delete node is n0 node
+                if( current.left === null && current.right === null) {
+                    if(current === this.root) {
+                        return this.root = null;
+                    }
+                    if( isLeft ) {
+                        return parent.left = null;
+                    } else {
+                        return parent.rigth = null;
+                    }
+                }
+                // the delete node is n1 node
+                if( current.left && !current.right ) {
+                    if( current === this.root ) {
+                        return this.root = current.left;
+                    }
+                    if( isLeft ) {
+                        return parent.left = current.left;
+                    } else {
+                        return parent.right = current.left
+                    }
+                }
+
+                if( !current.left && current.right) {
+                    if( current === this.root ) {
+                        return this.root = current.right;
+                    }
+                    if( isLeft ) {
+                        return parent.left = current.right;
+                    } else {
+                        return parent.right = current.right;
+                    }
+                }
+
+                if( current.left && current.right) {
+                    let successor = this.getSuccessor(current);
+                    if( current === this.root) {
+                       this.root = successor;
+                    } else if ( isLeft ) {
+                        parent.left = successor;
+                    } else {
+                        parent.right = successor;
+                    }
+                    successor.left = current.left;
+                }
+
+            } 
+                //the delete node n2 node
+                //找前驱 或者 找后继
+            getSuccessor(deleteNode) {
+                let successor = deleteNode;
+                let current = deleteNode.right;
+                let successorParent = deleteNode;
+                while( current ) {
+                    successorParent = successor;
+                    successor = current;
+                    current = current.left;
+                }
+                //if the successor is the right node the the deleteNode
+                //otherwise the successor will be have a parentnode and on its left.
+                if( successor !== deleteNode.right) {
+                    successorParent.left = successor.right;
+                    successor.right = deleteNode.right;
+                }
+                return successor;
             }
 
         }
@@ -134,13 +220,15 @@
         bst.insert(18);
         bst.insert(25);
         bst.insert(6);
+        bst.remove(7);
+        
 
         let result = '';
         bst.postOrderTraversal((str) => {
             result += (str + ' ');
         })
         console.log(result);
-        console.log(bst.search(7));
+        // console.log(bst.search(7));
         
 
         

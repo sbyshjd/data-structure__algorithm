@@ -10,5 +10,47 @@
     <h3>几乎所有的编程语言都会默认提供的数据类型</h3>
     <h3>字典又称为映射（比如在java中）</h3>
     <h3>JS 的 初期没有字典类型 因为JS的对象（Object）就是字典。可以动态的添加或者删除属性</h3>
+
+    <script src="./Dictionary.html"></script>
+    <script>
+        class Dictionary {
+            constructor() {
+                this.items = {};
+            }
+            set(value, key) {
+                this.items[key] = value;
+            }
+
+            has(key) {
+                return this.items.hasOwnProperty(key);
+            }
+
+            remove(key) {
+                if(!this.has(key)) return false;
+                delete this.items[key];
+                return true;
+            }
+
+            get(key) {
+                return this.has(key) ? this.items[key] : null
+            }
+
+            keys() {
+                return Object.keys(this.items);
+            }
+
+            values() {
+                return Object.values(this.items);
+            }
+
+            size() {
+                return this.keys.length;
+            }
+
+            clear() {
+                this.items = {};
+            }
+        }
+    </script>
 </body>
 </html>

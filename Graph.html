@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grpah</title>
+</head>
+<body>
+    <h1>图论主要研究事物的关系 顶点代表事物 边代表关系</h1>
+    <div>
+        顶点可以由数组或者链表储存
+    </div>
+    <div>
+        边的表示： 邻接矩阵；
+        或者： 邻接表；
+    </div>
+    <div>
+        图的遍历是图数据类型的重点方法，有两种：
+        1.广度优先搜索(Breadth First Search-BFS)
+        2.深度优先搜索(Depth First Search-DFS)
+        两种遍历算法 都要指定第一个被访问点
+    </div>
+
+    <script src="./dictionary.js"></script>
+    <script>
+        class Graph {
+            constructor() {
+                this.vertexes = [];
+                this.edges = new Dictionary();
+            }
+
+            addVertex(vertex) {
+                this.vertexes.push(vertex);
+                this.edges.set(vertex, []);
+            }
+
+            addEdges(vertex1, vertex2) {
+                this.edges.get(vertex1).push(vertex2);
+                this.edges.get(vertex2).push(vertex1);
+            }
+
+            toString() {
+                let finalString = '';
+                this.vertexes.forEach(vertex => {
+                    finalString += vertex + ' --> ';
+                    this.edges.get(vertex).forEach(toVertex => finalString += toVertex + ' ');
+                    finalString += '\n';
+                })
+                return finalString;
+            }
+
+            //为了方便遍历 初始化状态颜色
+            initializeColor() {
+                let colors ={};
+                this.vertexes.forEach(vertex => colors[vertex] = 'white');
+                return colors;
+            }
+
+            //breadth first search
+            breadthFirstSearch(initVertex, handler) {
+                let colors = this.initializeColor();
+                let queue = [];
+                queue.push(initVertex);
+                while(queue.length > 0) {
+                    let v = queue.shift();
+                    let vList = this.edges.get(v);
+                    colors[v] = 'grey';
+                    vList.forEach( vertex => {
+                        if(colors[vertex] === 'white') {
+                            colors[vertex] = 'grey';
+                            queue.push(vertex)
+                        }
+                    })
+                    handler(v);
+                    colors[v] = 'black';
+                }
+            }
+
+            //depth first search
+            depthFirstSearch(initVertex, handler) {
+                let colors = this.initializeColor();
+                this.dFSVisit(initVertex, colors, handler);
+
+            }
+
+            dFSVisit(vertex, colors, handler) {
+                colors[vertex] = 'grey';
+                handler(vertex);
+                let vList = this.edges.get(vertex);
+                vList.forEach(vertex => {
+                    if(colors[vertex]==='white')
+                    this.dFSVisit(vertex, colors, handler)
+                })
+            }
+
+
+        }
+
+        const g = new Graph();
+
+        const myVertexes = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+        myVertexes.forEach(vertex => g.addVertex(vertex));
+
+        g.addEdges('A', 'B')
+        g.addEdges('A', 'C')
+        g.addEdges('A', 'D')
+        g.addEdges('C', 'D')
+        g.addEdges('C', 'G')
+        g.addEdges('D', 'G')
+        g.addEdges('D', 'H')
+        g.addEdges('B', 'E')
+        g.addEdges('B', 'F')
+        g.addEdges('E', 'I')
+
+        console.log(g.toString())
+        let result = '';
+        g.depthFirstSearch(g.vertexes[0], (v) => {
+            result += v + ' ';
+        })
+        console.log(result)
+    </script>
+</body>
+</html>
