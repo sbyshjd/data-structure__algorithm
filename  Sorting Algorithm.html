@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorting Algorithm</title>
+</head>
+<body>
+    <div>冒泡排序 选择排序 插入排序 希尔排序 快速排序</div>
+
+
+    <script>
+        class ArrayList {
+            constructor() {
+                this.array = [];
+            }
+            insert(item) {
+                this.array.push(item)
+            }
+
+            toString() {
+                return this.array.join('-');
+            }
+
+            bubbleSort() {
+                let numbers = this.array.length;
+                // for(let i = 1; i < numbers; i++ ) {
+                //     let num = numbers - i;
+                //     for(let j = 0; j < num; j++ ) {
+                //         if(this.array[j] > this.array[j+1]) {
+                //             let bigNum = this.array[j];
+                //             this.array[j] = this.array[j+1];
+                //             this.array[j+1] = bigNum;
+                //         }
+                //     }
+                // }
+
+                for( let i = numbers - 1; i >= 0; i--) {
+                    for( let j = 0; j < i; j++) {
+                        if(this.array[j] > this.array[j+1]) {
+                            let bigNum = this.array[j];
+                            this.array[j] = this.array[j+1];
+                            this.array[j+1] = bigNum;
+                        }
+                    }
+                }
+            }
+
+            selectSort() {
+                let length = this.array.length;
+                for(let i = 0; i < length - 1; i++) {
+                    let min = i; 
+                    for( let j = i + 1; j < length; j++ ) { 
+                        if( this.array[j] < this.array[min]) {
+                            min = j;
+                        }
+                    }
+                    let smallNum = this.array[min];
+                    this.array[min] = this.array[i];
+                    this.array[i] = smallNum;
+                }
+            }
+
+            insertionSort() {
+                let length = this.array.length;
+                for(let j = 1; j < length; j++) {
+                    let temp = this.array[j];
+                    // for(let i = j-1; i>=0; i--) {
+                    //     if(this.array[i] > temp) {
+                    //         this.array[i+1] = this.array[i];
+                    //     } else {
+                    //         this.array[i+1] = temp;
+                    //         break;
+                    //     }
+                    //     if( i === 0) {
+                    //         this.array[0] = number;
+                    //     }
+                    // }
+                    let i = j - 1;
+                    while(this.array[i] > temp && i >= 0) {
+                        this.array[i+1] = this.array[i];
+                        i--;
+                    }
+                    this.array[i+1] = temp;
+                }
+            }
+
+            shellSort() {
+                let length = this.array.length;
+                let gap = Math.floor(length/2);
+                while(gap >= 1) {
+                    for(let i = gap; i < length; i++) {
+                        let temp = this.array[i];
+                        let j = i;
+                        while(this.array[j-gap] > temp && j > gap - 1) {
+                            this.array[j] = this.array[j-gap];
+                            j -= gap;
+                        }
+                        this.array[j] = temp;
+                    }
+
+                    gap = Math.floor(gap/2);
+                }
+            }
+
+            median(left, right) {
+                let center = Math.floor((left + right)/2);
+                if(this.array[left] > this.array[center]) {
+                    let temp = this.array[left];
+                    this.array[left] = this.array[center];
+                    this.array[center] = temp;
+                }
+                
+                if (this.array[center] > this.array[right]) {
+                    let temp = this.array[center];
+                    this.array[center] = this.array[right];
+                    this.array[right] = temp;
+                }
+
+                if(this.array[left] > this.array[center]) {
+                    let temp = this.array[left];
+                    this.array[left] = this.array[center];
+                    this.array[center] = temp;
+                }
+
+                let temp = this.array[center];
+                this.array[center] = this.array[right - 1];
+                this.array[right - 1] = temp;
+
+                return this.array[right - 1];
+
+            }
+
+            quickSort() {
+                this.quick(0, this.array.length - 1)
+            }
+
+            quick(left, right) {
+                if( left  >= right ) return;
+                let pivot = this.median(left, right);
+                let i = left;
+                let j = right - 1;
+                while (true) {
+                    while(this.array[++i] < pivot){};
+                    while(this.array[--j] > pivot) {};
+                    if( i < j ) {
+                        this.swap(i, j)
+                    } else {
+                        break;
+                    }
+                }
+                this.swap(i, right-1);
+                this.quick(left, i - 1);
+                this.quick(i + 1, right)
+
+            }
+
+            swap(i, j) {
+                let temp = this.array[i];
+                this.array[i] = this.array[j];
+                this.array[j] = temp;
+            }
+        }
+
+        const list = new ArrayList();
+        list.insert(66);
+        list.insert(88);
+        list.insert(12);
+        list.insert(87);
+        list.insert(100);
+        list.insert(5);
+        list.insert(566);
+        list.insert(23);
+
+        console.log(list.toString());
+        list.quickSort();
+        console.log(list.toString());
+    
+        
+    </script>
+</body>
+</html>
